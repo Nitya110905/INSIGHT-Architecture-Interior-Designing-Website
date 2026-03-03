@@ -125,7 +125,7 @@
                 console.log("Success! Opening checkout for session:", data.payment_session_id);
                 
                 cashfree.checkout({
-                    paymentSessionId: data.payment_session_id.trim(),
+                    paymentSessionId: data.payment_session_id,
                     redirectTarget: "_self" 
                 });
             } else {

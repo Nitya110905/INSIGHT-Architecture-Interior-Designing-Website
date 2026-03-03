@@ -5,6 +5,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 import random
 import time
+import uuid
 from cashfree_pg.api_client import Cashfree
 from cashfree_pg.models.create_order_request import CreateOrderRequest
 from cashfree_pg.models.customer_details import CustomerDetails
@@ -12,6 +13,8 @@ from cashfree_pg.models.order_meta import OrderMeta
 from django.http import JsonResponse
 from django.db import IntegrityError
 import json
+from django.urls import reverse
+from django.shortcuts import get_object_or_404
 
 # Fixed initialization based on your specific SDK version requirements
 cashfree_instance = Cashfree(
@@ -457,7 +460,7 @@ def create_cashfree_booking(request, pk):
         else:
             data = request.POST
 
-        design = Designer.objects.get(id=pk)
+        design = get_object_or_404(Designer, id=pk)
         user = User.objects.get(email=request.session['email'])
 
         # Use data.get() instead of request.POST.get()
@@ -470,7 +473,7 @@ def create_cashfree_booking(request, pk):
             site_type=data.get('site_type') 
         )
 
-        unique_order_id = f"INS_ORDR_{int(time.time())}"
+        unique_order_id = f"INS_{uuid.uuid4().hex[:12]}"
         clean_phone = str(user.contact)[-10:]
         clean_amount = round(float(design.user.consultation_fee), 2)
 
@@ -480,9 +483,11 @@ def create_cashfree_booking(request, pk):
             customer_email=user.email
         )
 
-        meta = OrderMeta(
-            return_url="http://127.0.0.1:8000/payment-success/?order_id={order_id}"
-        )
+        return_url = request.build_absolute_uri(
+            reverse("payment_success")
+        ) + f"?order_id={unique_order_id}"
+
+        meta = OrderMeta(return_url=return_url)
 
         order_request = CreateOrderRequest(
             order_id=unique_order_id,
@@ -494,22 +499,22 @@ def create_cashfree_booking(request, pk):
 
         try:
             api_response = cashfree_instance.PGCreateOrder("2023-08-01", order_request)
-            raw_id = str(api_response.data.payment_session_id)
-            clean_session_id = raw_id.replace("paymentpayment", "").replace("payment", "").strip()
-            print(f"DEBUG: Final Clean Session ID: {clean_session_id}")
+            if not api_response.data or not api_response.data.payment_session_id:
+                return JsonResponse({"error": "Failed to create payment session"}, status=400)
+            payment_session_id = api_response.data.payment_session_id
             
             Booking.objects.create(
                 dreamer=user,
                 designer=design.user,
                 design=design,
-                site=new_site, 
+                site=new_site,
                 amount=design.user.consultation_fee,
                 order_id=unique_order_id,
-                payment_session_id=clean_session_id
+                payment_session_id=payment_session_id
             )
 
             return JsonResponse({
-                'payment_session_id': str(clean_session_id), 
+                'payment_session_id': payment_session_id,
                 'order_id': unique_order_id
             })
 
@@ -519,11 +524,13 @@ def create_cashfree_booking(request, pk):
 def payment_success(request):
     order_id = request.GET.get('order_id')
     try:
-        api_response = cashfree_instance.PGGetOrder("2023-08-01", order_id)
-        if api_response.data.order_status == "PAID":
+        api_response = cashfree_instance.PGGetOrder(order_id)
+        if api_response.data.order_status == "SUCCESS":
             booking = Booking.objects.get(order_id=order_id)
             booking.is_paid = True
             booking.save()
+            print("ORDER STATUS:", api_response.data.order_status)
+            print("FULL RESPONSE:", api_response.data)
             return render(request, 'success.html', {'booking': booking})
         else:
             return redirect('payment_failure') 
