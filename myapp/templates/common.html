@@ -72,17 +72,21 @@
                                 <a href="{% url 'add_design' %}" class="nav-item nav-link">
                                 Add Design
                                 </a>
-                                <a href="{% url 'manage_design' %}" style="margin-right:10px" class="nav-item nav-link">
+                                <a href="{% url 'manage_design' %}" class="nav-item nav-link">
                                 Manage Design
+                                </a>
+                                <a href=""  class="nav-item nav-link">
+                                Appointments
                                 </a>
                             {%else%}
                                 <a href="{% url 'service' %}" class="nav-item nav-link">Services</a>
-                                <div style="margin-left: 20px;"></div>
-                                    <a href="{% url 'moodboard' %}"><i class="fa-solid fa-heart" style="color: #008080;font-size: x-large;"></i></a>
+                                <a href="" class="nav-item nav-link">Bookings</a>
+                                <div ></div>
+                                    <a href="{% url 'moodboard' %}" class="nav-item nav-link "><i class="fa-solid fa-heart" style="color: #008080;font-size: x-large;"></i></a>
                                 </div>
                             {% endif %}
-                                <div style="margin-left: 20px;"></div>
-                                    <a href="{% url 'uprofile' %}">
+                                <div ></div>
+                                    <a href="{% url 'uprofile' %}"class="nav-item nav-link ">
                                         <img src="{{request.session.profile}}" alt="" height="45px" width="45px" style="border-radius: 50%; border:1px solid black">
                                     </a>
                                 </div>

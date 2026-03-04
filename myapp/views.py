@@ -457,6 +457,8 @@ def designer_info(request, pk):
         return redirect('home')
     
 def create_cashfree_booking(request, pk):
+    if 'email' not in request.session:
+        return JsonResponse({'error': 'Authentication required. Please log in.'}, status=401)
     if request.method == "POST":
         # Check if data is coming as JSON (common with Fetch API)
         if request.content_type == 'application/json':
@@ -526,6 +528,9 @@ def create_cashfree_booking(request, pk):
             return JsonResponse({'error': str(e)}, status=400)
 
 def payment_success(request):
+
+    if 'email' not in request.session:
+        return redirect('login')
     order_id = request.GET.get('order_id')
     
     try:
@@ -547,6 +552,8 @@ def payment_failure(request):
     return render(request, 'failure.html')
 
 def download_receipt(request, order_id):
+    if 'email' not in request.session:
+        return redirect('login')
     booking = get_object_or_404(Booking, order_id=order_id)
     template_path = 'receipt_pdf.html'
     context = {'booking': booking}
@@ -562,6 +569,9 @@ def download_receipt(request, order_id):
     if pisa_status.err:
        return HttpResponse('We had some errors <pre>' + html + '</pre>')
     return response
+
+def bookings(request):
+    return render(request,'bookings.html')
     
     
 

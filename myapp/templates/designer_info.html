@@ -118,7 +118,19 @@
             body: formData, 
             headers: { 'X-CSRFToken': '{{ csrf_token }}' }
         })
-        .then(res => res.json())
+        .then(res => {
+            if (res.status === 401) {
+                alert("Your session has expired. Please log in again.");
+                window.location.href = "{% url 'login' %}";
+                return;
+            }
+        
+            if (!res.ok) {
+                throw new Error('Server returned an error');
+            }
+
+            return res.json();
+        })
         .then(data => {
             if (data.payment_session_id) {
                 
@@ -132,7 +144,9 @@
         })
         .catch(err => {
             console.error("Fetch error:", err);
-            alert("Connection failed. Check if your server is running.");
+            if (window.location.pathname !== "{% url 'login' %}") {
+                alert("Connection failed. Check if your server is running.");
+            }
         });
     };
 </script>
