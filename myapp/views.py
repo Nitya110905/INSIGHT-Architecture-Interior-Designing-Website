@@ -571,7 +571,18 @@ def download_receipt(request, order_id):
     return response
 
 def bookings(request):
-    return render(request,'bookings.html')
+    if 'email' not in request.session:
+        return render('login')
+    try:
+        user = User.objects.get(email = request.session['email'])
+        user_bookings = Booking.objects.filter(dreamer=user).order_by('-id')
+
+        return render(request, 'bookings.html', {
+            'bookings': user_bookings,
+        })
+    except User.DoesNotExist:
+        return redirect('login')
+
     
     
 
