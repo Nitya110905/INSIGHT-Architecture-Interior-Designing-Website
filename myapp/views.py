@@ -582,6 +582,17 @@ def bookings(request):
         })
     except User.DoesNotExist:
         return redirect('login')
+    
+def appointments(request):
+    if 'email' not in request.session:
+        return redirect('login')
+    
+    user = User.objects.get(email=request.session['email'])
+    appointments = Booking.objects.filter(designer=user, is_paid=True).order_by('-id')
+
+    return render(request, 'appointments.html', {
+        'appointments': appointments
+    })
 
     
     

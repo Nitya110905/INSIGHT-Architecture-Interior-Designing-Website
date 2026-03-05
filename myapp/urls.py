@@ -50,4 +50,5 @@ urlpatterns = [
     path('payment-failure/', views.payment_failure, name='payment_failure'),
     path('download_receipt/<str:order_id>/', views.download_receipt, name='download_receipt'),
     path('bookings', views.bookings, name='bookings'),
+    path('appointments', views.appointments, name='appointments'),
     ]

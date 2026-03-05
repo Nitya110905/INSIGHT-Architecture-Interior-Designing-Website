@@ -1,0 +1,129 @@
+{% extends "common.html" %}
+{% load static %}
+{% block content %}
+
+
+    <div class="container-fluid pb-5 bg-primary hero-header">
+        <div class="container py-5">
+            <div class="row g-3 align-items-center">
+                <div class="col-lg-6 text-center text-lg-start">
+                    <h1 class="display-1 mb-0 animated slideInLeft">Appointments</h1>
+                </div>
+                <div class="col-lg-6 animated slideInRight">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb justify-content-center justify-content-lg-end mb-0">
+                            <li class="breadcrumb-item"><a class="text-primary" href="#!">Home</a></li>
+                            <li class="breadcrumb-item"><a class="text-primary" href="#!">Pages</a></li>
+                            <li class="breadcrumb-item text-secondary active" aria-current="page">Appointments</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid py-5">
+        <div class="container py-5">
+            {% if appointments%}
+            <div class="text-center wow fadeIn" data-wow-delay="0.1s">
+                <h1 class="mb-5"> Below are Your <span class="text-uppercase text-primary bg-light px-2">Appointments!</span></h1>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <div class="wow fadeIn" data-wow-delay="0.3s">
+                        <div class="booking-grid">
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Booking ID</th>
+      <th scope="col">Client Name</th>
+      <th scope="col">Site Type</th>
+      <th scope="col">Address</th>
+      <th scope="col">Payment Status</th>
+      <th></th>
+    </tr>
+  </thead>
+        {% for app in appointments %}
+  <tbody>
+    <tr>
+      <th scope="row">{{b.order_id}}</th>
+      <td>{{app.dreamer.name}}</td>
+      <td>{{ app.site.site_type }}</td>
+      <td>
+        <button style="background-color:teal;color: white;height: 30px;width: 85%;font-size: medium;border: none;border-radius: 50px;" data-bs-toggle="modal" data-bs-target="#exampleModal">View Address</button>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Address Details</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        {{app.site.address}},<br> {{app.site.city}}, <br> {{app.site.state}} - {{app.site.pincode}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" style="background-color:teal;color:white" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+      </td>
+      <td>
+        {% if b.is_paid %}
+                        Paid
+                    {% else %}
+                        Pending
+                    {% endif %}
+      </td>
+      <td>
+        {% if b.is_paid %}
+                    <a href="{% url 'download_receipt' b.order_id %}" class="">Download Receipt</a>
+                {% endif %}
+      </td>
+    </tr>
+  </tbody>
+  {% endfor %}
+  
+
+        {% else %}
+            <div class="no-bookings">
+                <h3>You haven't made any bookings yet!</h3>
+                <p>Explore our top designers and start your dream project today.</p>
+                <a href="{% url 'home' %}" class="btn btn-primary btn-lg px-5">Browse Designs</a>
+            </div>
+        {% endif %}
+</table>
+    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid bg-primary newsletter p-0">
+        <div class="container p-0">
+            <div class="row g-0 align-items-center">
+                <div class="col-md-5 ps-lg-0 text-start wow fadeIn" data-wow-delay="0.2s">
+                    <img class="img-fluid w-100" src="{% static 'img/newsletter.jpg' %}" alt="">
+                </div>
+                <div class="col-md-7 py-5 newsletter-text wow fadeIn" data-wow-delay="0.5s">
+                    <div class="p-5">
+                        <h1 class="mb-5">Subscribe the <span
+                                class="text-uppercase text-primary bg-white px-2">Newsletter</span></h1>
+                        <div class="position-relative w-100 mb-2">
+                            <input class="form-control border-0 w-100 ps-4 pe-5" type="text"
+                                placeholder="Enter Your Email" style="height: 60px;">
+                            <button type="button" class="btn shadow-none position-absolute top-0 end-0 mt-2 me-2"><i
+                                    class="fa fa-paper-plane text-primary fs-4"></i></button>
+                        </div>
+                        <p class="mb-0">Diam sed sed dolor stet amet eirmod</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% endblock %}
