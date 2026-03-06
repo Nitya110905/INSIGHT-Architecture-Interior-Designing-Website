@@ -16,7 +16,8 @@
     <div class="details">
         <p><strong>Customer:</strong> {{ booking.dreamer.name }}</p>
         <p><strong>Designer:</strong> {{ booking.designer.name }}</p>
-        <p><strong>Service:</strong> {{ booking.design.dname }}</p>
+        <p><strong>Visit Date:</strong> {{ booking.site.visit_date }}</p>
+        <p><strong>Visit Time:</strong> {{ booking.site.visit_time }}</p>
         <p><strong>Amount Paid:</strong> ₹{{ booking.amount }}</p>
         <p><strong>Date:</strong> {{ booking.created_at|date:"D, d M Y" }}</p>
     </div>

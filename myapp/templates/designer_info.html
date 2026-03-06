@@ -15,7 +15,6 @@
                 </div>
                 <h1 class="display-1 mb-0 animated slideInLeft">Name : {{designer.name}}</h1><br>
                 <h4 class="display-10 mb-0 animated slideInLeft" style="margin-left: 10px;">Contact : {{designer.contact}}</h4><br>
-                <h4 class="display-10 mb-0 animated slideInLeft" style="margin-left: 10px;">Email : {{designer.email}}</h4><br>
                 <h4 class="display-10 mb-0 animated slideInLeft" style="margin-left: 10px;">Consultation
                     Fees : <b>₹ {{designer.consultation_fee}} /-</b></h4>
             </div>
@@ -63,19 +62,34 @@
                                         <label for="pincode">Pincode</label>
                                     </div>
                                 </div>
-                                <div class="col-12">
+                                <div class="col-md-12">
                                     <div class="form-floating">
                                         <input type="text" class="form-control" id="city" name="city" placeholder="City" >
                                         <label for="city">City/District</label>
                                     </div>
                                 </div>
-                                <div class="col-12">
+                                <div class="col-md-12">
                                     <div class="form-floating">
                                         <input type="text" class="form-control" id="state" name="state" placeholder="State" >
                                         <label for="state">State</label>
                                     </div>
                                 </div>
+                                <div class="col-md-12">
+                                    <div class="form-floating">
+                                        <input type="date" name="visit_date" id="visit_date" class="form-control" required >
+                                        <label for="visit_date">Visit Date</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-floating">
+                                        <input type="time" name="visit_time" id="visit_time" class="form-control" 
+                                        min="10:00" max="18:00" required >
+                                        <label for="visit_time">Visit Time (10:00 AM - 06:00 PM):</label>
+                                        <small id="timeError" style="color:red; display:none;">Please select a time between 10 AM and 6 PM.</small>
+                                    </div>
+                                </div>
                             </div>
+                        
       </div>
       <div class="modal-footer col-12">
         <button type="submit" class="btn btn-primary w-100 py-3">Save & Proceed to Payment</button>
@@ -87,6 +101,25 @@
 </div>
 
 <script>
+    const today = new Date().toISOString().split('T')[0];
+    const dateInput = document.getElementById('visit_date');
+    const timeInput = document.getElementById('visit_time');
+    dateInput.setAttribute('min', today);
+    function validateDateTime() {
+    const selectedDate = dateInput.value;
+    const selectedTime = timeInput.value;
+    if (!selectedDate || !selectedTime) return;
+
+    const now = new Date();
+    const [hours, minutes] = selectedTime.split(':');
+    const selectedDateTime = new Date(selectedDate);
+    selectedDateTime.setHours(hours, minutes);
+
+    if (selectedDateTime < now) {
+        alert("You cannot select a time that has already passed.");
+        this.value = "";
+    }
+};
 
     function fetchAddress() {
         let pincode = document.getElementById("pincode").value;

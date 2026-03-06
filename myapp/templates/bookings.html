@@ -29,7 +29,7 @@
                 <h1 class="mb-5"> Below are Your <span class="text-uppercase text-primary bg-light px-2">Bookings!</span></h1>
             </div>
             <div class="row justify-content-center">
-                <div class="col-lg-7">
+                <div class="col-lg-12">
                     <div class="wow fadeIn" data-wow-delay="0.3s">
                         <div class="booking-grid">
 
@@ -37,8 +37,11 @@
   <thead>
     <tr>
       <th scope="col">Booking ID</th>
-      <th scope="col">Designer Name</th>
       <th scope="col">Booking Date</th>
+      <th scope="col">Designer Name</th>
+      <th scope="col">Designer Contact</th>
+      <th scope="col">Visit Date</th>
+      <th scope="col">Visit Time</th>
       <th scope="col">Payment Status</th>
       <th></th>
     </tr>
@@ -47,8 +50,11 @@
   <tbody>
     <tr>
       <th scope="row">{{b.order_id}}</th>
-      <td>{{b.designer.name}}</td>
       <td>{{ b.created_at|date:"d M Y" }}</td>
+      <td>{{b.designer.name}}</td>
+      <td>{{b.designer.contact}}</td>
+      <td>{{b.site.visit_date}}</td>
+      <td>{{b.site.visit_time}}</td>
       <td>
         {% if b.is_paid %}
                         Paid

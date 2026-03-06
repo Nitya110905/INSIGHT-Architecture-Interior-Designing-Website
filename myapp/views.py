@@ -19,6 +19,7 @@ from django.http import HttpResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 import io
+from datetime import datetime,date
 
 # Fixed initialization based on your specific SDK version requirements
 cashfree_instance = Cashfree(
@@ -460,7 +461,6 @@ def create_cashfree_booking(request, pk):
     if 'email' not in request.session:
         return JsonResponse({'error': 'Authentication required. Please log in.'}, status=401)
     if request.method == "POST":
-        # Check if data is coming as JSON (common with Fetch API)
         if request.content_type == 'application/json':
             data = json.loads(request.body)
         else:
@@ -469,16 +469,30 @@ def create_cashfree_booking(request, pk):
         design = get_object_or_404(Designer, id=pk)
         user = User.objects.get(email=request.session['email'])
 
-        # Use data.get() instead of request.POST.get()
-        new_site = Site.objects.create(
-            user=user,
-            address=data.get('address'),
-            city=data.get('city'),
-            state=data.get('state'),
-            pincode=data.get('pincode'),
-            site_type=data.get('site_type') 
-        )
+        visit_date_str = data.get('visit_date')
+        visit_time_str = data.get('visit_time')
+        if visit_date_str and visit_time_str:
+            selected_date = datetime.strptime(visit_date_str, '%Y-%m-%d').date()
+            selected_time = datetime.strptime(visit_time_str, '%H:%M').time()
+        
+            now = datetime.now()
+            if selected_date < now.date():
+                return JsonResponse({'error': 'You cannot book a date in the past.'}, status=400)
+            if selected_date == now.date() and selected_time < now.time():
+                    return JsonResponse({'error': 'This time slot has already passed for today.'}, status=400)
+            if selected_time.hour < 10 or selected_time.hour >= 18:
+                return JsonResponse({'error': 'Please select a time between 10:00 AM and 06:00 PM.'}, status=400)
 
+        new_site = Site.objects.create(
+        user=user,
+        address=data.get('address'),
+        city=data.get('city'),
+        state=data.get('state'),
+        pincode=data.get('pincode'),
+        site_type=data.get('site_type'),
+        visit_date=selected_date,     
+        visit_time=selected_time  
+        )
         unique_order_id = f"INS_{uuid.uuid4().hex[:12]}"
         clean_phone = str(user.contact)[-10:]
         clean_amount = round(float(design.user.consultation_fee), 2)
@@ -524,7 +538,7 @@ def create_cashfree_booking(request, pk):
                 'order_id': unique_order_id
             })
 
-        except :
+        except Exception as e :
             return JsonResponse({'error': str(e)}, status=400)
 
 def payment_success(request):
@@ -534,10 +548,7 @@ def payment_success(request):
     order_id = request.GET.get('order_id')
     
     try:
-        # Based on your dir() output, the method is PGFetchOrder
         api_response = cashfree_instance.PGFetchOrder("2023-08-01", order_id)
-        
-        # Check for the PAID status in the response data
         if api_response.data and api_response.data.order_status == "PAID":
             booking = Booking.objects.get(order_id=order_id)
             booking.is_paid = True

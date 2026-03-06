@@ -19,7 +19,9 @@
                             <li class="list-group-item"><strong>Order ID:</strong> {{ booking.order_id }}</li>
                             <li class="list-group-item"><strong>Amount Paid:</strong> ₹{{ booking.amount }}</li>
                             <li class="list-group-item"><strong>Site Type:</strong> {{ booking.site.site_type }}</li>
-                            <li class="list-group-item"><strong>Address:</strong> {{ booking.site.address }}, {{ booking.site.city }}</li>
+                            <li class="list-group-item"><strong>Address:</strong> {{ booking.site.address }}, {{ booking.site.city }} - {{booking.site.pincode}}</li>
+                            <li class="list-group-item"><strong>Visit Date:</strong> {{booking.site.visit_date}}</li>
+                            <li class="list-group-item"><strong>Visit Time:</strong> {{booking.site.visit_time}}</li>
                         </ul>
                     </div>
                 </div>
