@@ -44,6 +44,7 @@ urlpatterns = [
     path('design_info/<slug:design_slug>/',views.design_info, name='design_info'),
     path('moodboard_add/<int:pk>/',views.moodboard_add,name='moodboard_add'),
     path('moodboard/',views.moodboard,name='moodboard'),
+    path('moodboard_delete/<int:pk>/',views.moodboard_delete,name='moodboard_delete'),
     path('designer_info/<int:pk>/',views.designer_info,name='designer_info'),
     path('create-cashfree-order/<int:pk>/', views.create_cashfree_booking, name='create_cashfree_booking'),
     path('payment-success/', views.payment_success, name='payment_success'),

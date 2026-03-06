@@ -92,9 +92,9 @@
 
         {% else %}
             <div class="no-bookings">
-                <h3>You haven't made any bookings yet!</h3>
-                <p>Explore our top designers and start your dream project today.</p>
-                <a href="{% url 'home' %}" class="btn btn-primary btn-lg px-5">Browse Designs</a>
+                <h3>No Appointments Yet!</h3>
+                <p>Continue Adding Your Designs.</p>
+                <a href="{% url 'add_design' %}" class="btn btn-primary btn-lg px-5">Add Designs</a>
             </div>
         {% endif %}
 </table>

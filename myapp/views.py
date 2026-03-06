@@ -440,6 +440,29 @@ def moodboard(request):
     except User.DoesNotExist:
         return redirect('logout')
     
+
+def moodboard_delete(request, pk):
+    # 1. Session Check
+    if 'email' not in request.session:
+        return redirect('login')
+        
+    try:
+        user = User.objects.get(email=request.session['email'])
+        item = get_object_or_404(Moodboard, id=pk, user=user)
+        item.delete()
+        messages.success(request, "Design removed from your Moodboard!")
+        
+    except User.DoesNotExist:
+        request.session.flush() 
+        return redirect('login')
+    except Exception as e:
+        messages.error(request, "Something went wrong while removing the item.")
+        
+    return redirect('moodboard')
+
+
+
+    
 def designer_info(request, pk):
     if 'email' not in request.session:
         return redirect('login')
