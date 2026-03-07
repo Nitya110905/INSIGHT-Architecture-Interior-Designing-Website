@@ -208,7 +208,7 @@
 
 
 {% if messages %}
-    <script>
+    <script> 
         {% for message in messages %}
             Toastify({
                 text: "{{ message|escapejs }}",
@@ -231,6 +231,28 @@
 
     <!-- Template Javascript -->
     <script src="{% static 'js/main.js' %}"></script>
+    <script>
+    {% if request.session.email %}
+    let idleTimer;
+    const idleLimit = 300000; 
+
+    function resetIdleTimer() {
+        clearTimeout(idleTimer);
+        
+        idleTimer = setTimeout(function() {
+            window.location.href = "{% url 'logout' %}?reason=expired";
+        }, idleLimit);
+    }
+
+    window.onload = resetIdleTimer;
+    window.onmousemove = resetIdleTimer;
+    window.onmousedown = resetIdleTimer; 
+    window.ontouchstart = resetIdleTimer; 
+    window.onclick = resetIdleTimer;     
+    window.onkeydown = resetIdleTimer;   
+
+    {% endif %}
+</script>
 </body>
 
 </html>

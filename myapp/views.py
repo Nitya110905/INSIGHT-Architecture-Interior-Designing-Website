@@ -20,7 +20,7 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 import io
 from datetime import datetime,date
-
+from django.contrib import auth
 # Fixed initialization based on your specific SDK version requirements
 cashfree_instance = Cashfree(
     XClientId=settings.CASHFREE_CLIENT_ID,
@@ -110,8 +110,13 @@ def login(request):
         return render (request,'login.html')
 
 def logout(request):
+    reason = request.GET.get('reason')
+    auth.logout(request)
     request.session.flush()
-    messages.success(request,"Logout Successful !")
+    if reason == 'expired':
+        messages.warning(request, "Your session expired due to inactivity.")
+    else:
+        messages.success(request, "Logged out successfully.")
     return redirect('login')
 
 def fpass(request):
@@ -368,11 +373,13 @@ def delete_design(request, pk):
         return redirect('manage_design')
     
 def home(request):
-    context = {}
-    context['all_designs'] = Designer.objects.all().order_by('-id')[:6] 
+    if 'email' not in request.session:
+        return redirect('login')
+    else:
+        context = {}
+        context['all_designs'] = Designer.objects.all().order_by('-id')[:6] 
     
-    user_design_count = 0
-    if 'email' in request.session:
+        user_design_count = 0
         try:
             user = User.objects.get(email=request.session['email'])
             context['user'] = user
