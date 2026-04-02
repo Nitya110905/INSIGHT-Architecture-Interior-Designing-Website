@@ -2,7 +2,6 @@
 {% load static %}
 {% block content %}
 
-
     <div class="container-fluid pb-5 bg-primary hero-header">
         <div class="container py-5">
             <div class="row g-3 align-items-center">
@@ -21,95 +20,76 @@
             </div>
         </div>
     </div>
-
     <div class="container-fluid py-5">
         <div class="container py-5">
-            {% if bookings%}
+            {% if bookings %}
             <div class="text-center wow fadeIn" data-wow-delay="0.1s">
                 <h1 class="mb-5"> Below are Your <span class="text-uppercase text-primary bg-light px-2">Bookings!</span></h1>
             </div>
+            
             <div class="row justify-content-center">
                 <div class="col-lg-12">
                     <div class="wow fadeIn" data-wow-delay="0.3s">
                         <div class="booking-grid">
-
-<table class="table table-hover">
-  <thead>
-    <tr>
-      <th scope="col">Booking ID</th>
-      <th scope="col">Booking Date</th>
-      <th scope="col">Designer Name</th>
-      <th scope="col">Designer Contact</th>
-      <th scope="col">Visit Date</th>
-      <th scope="col">Visit Time</th>
-      <th scope="col">Payment Status</th>
-      <th></th>
-    </tr>
-  </thead>
-        {% for b in bookings %}
-  <tbody>
-    <tr>
-      <th scope="row">{{b.order_id}}</th>
-      <td>{{ b.created_at|date:"d M Y" }}</td>
-      <td>{{b.designer.name}}</td>
-      <td>{{b.designer.contact}}</td>
-      <td>{{b.site.visit_date}}</td>
-      <td>{{b.site.visit_time}}</td>
-      <td>
-        {% if b.is_paid %}
-                        Paid
-                    {% else %}
-                        Pending
-                    {% endif %}
-      </td>
-      <td>
-        {% if b.is_paid %}
-                    <a href="{% url 'download_receipt' b.order_id %}" class="">Download Receipt</a>
-                {% endif %}
-      </td>
-    </tr>
-  </tbody>
-  {% endfor %}
-  
-
-        {% else %}
-            <div class="no-bookings">
-                <h3>You haven't made any bookings yet!</h3>
-                <p>Explore our top designers and start your dream project today.</p>
-                <a href="{% url 'home' %}" class="btn btn-primary btn-lg px-5">Browse Designs</a>
-            </div>
-        {% endif %}
-</table>
-    </div>
+                            
+                            <div class="table-responsive shadow-sm rounded bg-white">
+                                <table class="table table-hover align-middle text-nowrap mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th scope="col">Booking ID</th>
+                                            <th scope="col">Booking Date</th>
+                                            <th scope="col">Designer Name</th>
+                                            <th scope="col">Designer Contact</th>
+                                            <th scope="col">Visit Date</th>
+                                            <th scope="col">Visit Time</th>
+                                            <th scope="col">Payment Status</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    {% for b in bookings %}
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">{{b.order_id}}</th>
+                                            <td>{{ b.created_at|date:"d M Y" }}</td>
+                                            <td>{{b.designer.name}}</td>
+                                            <td>{{b.designer.contact}}</td>
+                                            <td>{{b.site.visit_date}}</td>
+                                            <td>{{b.site.visit_time}}</td>
+                                            <td>
+                                                {% if b.is_paid %}
+                                                    <span class="badge bg-success">Paid</span>
+                                                {% else %}
+                                                    <span class="badge bg-warning text-dark">Pending</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if b.is_paid %}
+                                                    <a href="{% url 'download_receipt' b.order_id %}" class="btn btn-outline-primary btn-sm">Download Receipt</a>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                            </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-
-    <div class="container-fluid bg-primary newsletter p-0">
-        <div class="container p-0">
-            <div class="row g-0 align-items-center">
-                <div class="col-md-5 ps-lg-0 text-start wow fadeIn" data-wow-delay="0.2s">
-                    <img class="img-fluid w-100" src="{% static 'img/newsletter.jpg' %}" alt="">
-                </div>
-                <div class="col-md-7 py-5 newsletter-text wow fadeIn" data-wow-delay="0.5s">
-                    <div class="p-5">
-                        <h1 class="mb-5">Subscribe the <span
-                                class="text-uppercase text-primary bg-white px-2">Newsletter</span></h1>
-                        <div class="position-relative w-100 mb-2">
-                            <input class="form-control border-0 w-100 ps-4 pe-5" type="text"
-                                placeholder="Enter Your Email" style="height: 60px;">
-                            <button type="button" class="btn shadow-none position-absolute top-0 end-0 mt-2 me-2"><i
-                                    class="fa fa-paper-plane text-primary fs-4"></i></button>
-                        </div>
-                        <p class="mb-0">Diam sed sed dolor stet amet eirmod</p>
+            {% else %}
+            <div class="row justify-content-center text-center py-5">
+                <div class="col-12 wow fadeIn" data-wow-delay="0.1s">
+                    <div class="no-bookings p-5 bg-light rounded shadow-sm">
+                        <i class="fa fa-folder-open fa-4x text-primary mb-4"></i>
+                        <h3>You haven't made any bookings yet!</h3>
+                        <p class="text-muted">Explore our top designers and start your dream project today.</p>
+                        <a href="{% url 'home' %}" class="btn btn-primary btn-lg px-5 mt-3">Browse Designs</a>
                     </div>
                 </div>
             </div>
+            {% endif %}
+
         </div>
     </div>
-
-
     {% endblock %}

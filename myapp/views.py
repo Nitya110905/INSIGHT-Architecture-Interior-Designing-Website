@@ -114,9 +114,9 @@ def logout(request):
     auth.logout(request)
     request.session.flush()
     if reason == 'expired':
-        messages.warning(request, "Your session expired due to inactivity.")
+        messages.warning(request, "Your session expired due to inactivity !")
     else:
-        messages.success(request, "Logged out successfully.")
+        messages.success(request, "Logged out successfully !")
     return redirect('login')
 
 def fpass(request):
@@ -165,7 +165,7 @@ def otp(request):
             
             if saved_otp and user_otp and int(saved_otp) == int(user_otp):
                 del request.session['otp'] 
-                messages.success(request, "OTP Verified!")
+                messages.success(request, "OTP Verified !")
                 return redirect('newpass')
             
             else:
@@ -192,7 +192,7 @@ def resend_otp(request):
             request.session['otp'] = new_otp
             request.session['otp_timestamp'] = time.time() # Reset the 60s timer
 
-            subject = 'New OTP for Forgotten-Password!'
+            subject = 'New OTP for Forgotten-Password !'
             msg = f'Hi {user.name}, Your NEW OTP is : {new_otp}.'
             email_from = settings.EMAIL_HOST_USER
             send_mail(subject, msg, email_from, [user.email])
@@ -209,7 +209,7 @@ def resend_otp(request):
 
 def newpass(request):
     if 'resetpass_email' not in request.session:
-        messages.error(request, "Please enter your email first!")
+        messages.error(request, "Please enter your email first !")
         return redirect('fpass')
     
     if request.method == "POST":
@@ -224,14 +224,14 @@ def newpass(request):
 
                 request.session.flush() 
                 
-                messages.success(request, "Password reset successful! Please login.")
+                messages.success(request, "Password reset successfull ! Please login !")
                 return redirect('login')
                 
             except User.DoesNotExist:
-                messages.error(request, "User not found. Please try again.")
+                messages.error(request, "User not found. Please try again !")
                 return redirect('fpass')
         else:
-            messages.error(request, "Passwords do not match!")
+            messages.error(request, "Passwords do not match !")
             return render(request, 'new-password.html')
 
     return render(request, 'new-password.html')
@@ -259,7 +259,7 @@ def uprofile(request):
             request.session['profile'] = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnSSxXHLqu5lsHYkFlZkvXuo2ZamNvdqLiCg&s"
 
         user.save()
-        messages.success(request, "Profile Updated Successfully!")
+        messages.success(request, "Profile Updated Successfully !")
         return redirect('uprofile')
     else:   
         return render(request, 'uprofile.html', {'user': user}) 
@@ -365,11 +365,11 @@ def delete_design(request, pk):
             design.dimage3.delete(save=False)
         design.delete() 
         
-        messages.success(request, "Design and all associated files deleted!")
+        messages.success(request, "Design and all associated files deleted !")
         return redirect('manage_design') 
         
     except (User.DoesNotExist, Designer.DoesNotExist):
-        messages.error(request, "Design not found!")
+        messages.error(request, "Design not found !")
         return redirect('manage_design')
     
 def home(request):
@@ -396,7 +396,7 @@ def home(request):
 
 def design_info(request, design_slug):
     if 'email' not in request.session:
-        messages.error(request, "Please login to view project details.")
+        messages.error(request, "Please login to view project details !")
         return redirect('login')
 
     try:
@@ -411,12 +411,12 @@ def design_info(request, design_slug):
     except User.DoesNotExist:
         return redirect('logout') 
     except Designer.DoesNotExist:
-        messages.error(request, "The requested design does not exist.")
+        messages.error(request, "The requested design does not exist !")
         return redirect('home')
     
 def moodboard_add(request, pk):
     if 'email' not in request.session:
-        messages.error(request, "Please login to add designs to your moodboard!")
+        messages.error(request, "Please login to add designs to your moodboard !")
         return redirect('login')
 
     try:
@@ -425,13 +425,13 @@ def moodboard_add(request, pk):
         obj, created = Moodboard.objects.get_or_create(user=user, design=design)
 
         if created:
-            messages.success(request, "Added to your moodboard!")
+            messages.success(request, "Added to your moodboard !")
         else:
-            messages.info(request, "This design is already in your moodboard.")
+            messages.info(request, "This design is already in your moodboard !")
         return redirect('design_info', design_slug=design.slug)
         
     except Designer.DoesNotExist:
-        messages.error(request, "Design not found!")
+        messages.error(request, "Design not found !")
         return redirect('home')
     
 def moodboard(request):
@@ -457,13 +457,13 @@ def moodboard_delete(request, pk):
         user = User.objects.get(email=request.session['email'])
         item = get_object_or_404(Moodboard, id=pk, user=user)
         item.delete()
-        messages.success(request, "Design removed from your Moodboard!")
+        messages.success(request, "Design removed from your Moodboard !")
         
     except User.DoesNotExist:
         request.session.flush() 
         return redirect('login')
     except Exception as e:
-        messages.error(request, "Something went wrong while removing the item.")
+        messages.error(request, "Something went wrong while removing the item !")
         
     return redirect('moodboard')
 
@@ -484,7 +484,7 @@ def designer_info(request, pk):
         })
 
     except Designer.DoesNotExist:
-        messages.error(request, "Project not found!")
+        messages.error(request, "Project not found !")
         return redirect('home')
     
 def create_cashfree_booking(request, pk):
