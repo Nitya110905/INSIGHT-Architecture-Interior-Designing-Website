@@ -12,4 +12,4 @@ Modern, Mobile-First UI: Built to look and feel great on any device, featuring i
 
 Built-In Security: Protects user data with Django's built-in CSRF protection, secure password hashing, and a custom auto-logout timer for inactive sessions.
 
-The Takeaway: Insight goes beyond a basic project—it is a fully functional, interview-ready application that highlights my ability to blend complex database logic, third-party APIs, and thoughtful user design.
+The Takeaway: Insight goes beyond a basic project—it is a fully functional application that highlights the ability to blend complex database logic, third-party APIs, and thoughtful user design.

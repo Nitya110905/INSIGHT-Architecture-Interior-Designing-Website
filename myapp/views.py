@@ -21,7 +21,6 @@ from xhtml2pdf import pisa
 import io
 from datetime import datetime,date
 from django.contrib import auth
-# Fixed initialization based on your specific SDK version requirements
 cashfree_instance = Cashfree(
     XClientId=settings.CASHFREE_CLIENT_ID,
     XClientSecret=settings.CASHFREE_CLIENT_SECRET,
@@ -74,7 +73,7 @@ def signup(request):
                     email=request.POST['email'],
                     password=request.POST['password'],
                     contact=request.POST['contact'],
-                    consultation_fee=fee, # Now it's safely a number
+                    consultation_fee=fee, 
                     usertype=u_type
                 )
                 messages.success(request, "Sign-Up Successful !")
@@ -190,7 +189,7 @@ def resend_otp(request):
             user = User.objects.get(email=email)
             new_otp = random.randint(111111, 999999)
             request.session['otp'] = new_otp
-            request.session['otp_timestamp'] = time.time() # Reset the 60s timer
+            request.session['otp_timestamp'] = time.time() 
 
             subject = 'New OTP for Forgotten-Password !'
             msg = f'Hi {user.name}, Your NEW OTP is : {new_otp}.'
@@ -449,7 +448,7 @@ def moodboard(request):
     
 
 def moodboard_delete(request, pk):
-    # 1. Session Check
+    
     if 'email' not in request.session:
         return redirect('login')
         
