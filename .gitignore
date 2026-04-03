@@ -1,5 +1,14 @@
-# Database
-*.sqlite3
+# Python environment
+venv/
+env/
+__pycache__/
+*.pyc
 
-# Media
+# Database
+db.sqlite3
+
+# Environment variables (Never upload passwords/secret keys!)
+.env
+
+# Media files (Images users upload should be stored externally, not in Git)
 media/
