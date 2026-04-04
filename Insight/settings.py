@@ -144,4 +144,4 @@ CASHFREE_CLIENT_ID = os.environ.get('CASHFREE_CLIENT_ID', '')
 CASHFREE_CLIENT_SECRET = os.environ.get('CASHFREE_CLIENT_SECRET', '')
 CASHFREE_ENV = 'SANDBOX' 
 
-ALLOWED_HOSTS = ['.vercel.app']
+ALLOWED_HOSTS = ['insight-architecture-interior-designing.onrender.com', 'localhost', '127.0.0.1']
