@@ -26,10 +26,10 @@
                     </div>
                 </div>
 
-                <div class="mt-5">
-                    <a href="{% url 'home' %}" class="btn btn-primary btn-lg px-5">Back to Home</a>
-                    <a href="{% url 'download_receipt' booking.order_id %}" class="btn btn-primary btn-lg px-5">Download Receipt</a>
-                </div>
+                <div class="mt-5 d-flex flex-column flex-md-row justify-content-center align-items-center gap-3">
+    <a href="{% url 'home' %}" class="btn btn-primary btn-lg px-5 w-100 w-md-auto">Back to Home</a>
+    <a href="{% url 'download_receipt' booking.order_id %}" class="btn btn-primary btn-lg px-5 w-100 w-md-auto">Download Receipt</a>
+</div>
             </div>
         </div>
     </div>
