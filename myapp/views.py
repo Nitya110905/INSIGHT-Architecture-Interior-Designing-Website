@@ -21,6 +21,7 @@ from xhtml2pdf import pisa
 import io
 from datetime import datetime,date
 from django.contrib import auth
+from django.contrib.auth.models import User
 cashfree_instance = Cashfree(
     XClientId=settings.CASHFREE_CLIENT_ID,
     XClientSecret=settings.CASHFREE_CLIENT_SECRET,
@@ -644,6 +645,13 @@ def appointments(request):
     return render(request, 'appointments.html', {
         'appointments': appointments
     })
+
+def setup_admin(request):
+    if not User.objects.filter(username='nitya_admin').exists():
+        User.objects.create_superuser('nitya_admin', 'admin@example.com', 'NS110905')
+        return HttpResponse("SUCCESS: Admin created! You can now log in.")
+    else:
+        return HttpResponse("Admin already exists! Go log in.")
 
     
     
