@@ -131,8 +131,11 @@ def fpass(request):
                 send_mail(subject, msg, email_from, recepient_list, fail_silently=False)
             except Exception as e:
                 print(f"EMAIL FAILED: {e}") 
-                messages.error(request, 'Network error. Please try again in a few minutes.')
-                return redirect('fpass')
+                # 2. Print the OTP directly to your Render logs!
+                print(f"DEVELOPER BYPASS - THE OTP IS: {otp}") 
+                
+                # 3. Show a warning, but DO NOT redirect them back to fpass!
+                messages.warning(request, 'Email network failed, but developer bypass is active!')
 
             request.session['resetpass_email'] = user.email
             request.session['otp'] = otp
