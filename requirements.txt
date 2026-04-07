@@ -45,3 +45,5 @@ xhtml2pdf==0.2.17
 python-dotenv
 psycopg2-binary 
 dj-database-url
+cloudinary
+django-cloudinary-storage

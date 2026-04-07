@@ -1,6 +1,9 @@
 from django.db import models
 from django.utils.text import slugify
 import uuid
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
+import cloudinary.uploader
 
 class User(models.Model):
     name = models.CharField(max_length=40)
@@ -97,3 +100,25 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"Booking {self.order_id} - {self.is_paid}"
+    
+
+@receiver(pre_delete, sender=User)
+def delete_user_image(sender, instance, **kwargs):
+    if instance.uprofile:
+        try:
+            cloudinary.uploader.destroy(instance.uprofile.name)
+            print(f"SUCCESS: Profile picture for {instance.email} destroyed!")
+        except Exception as e:
+            print(f"FAILED to delete profile picture: {e}")
+
+@receiver(pre_delete, sender=Designer)
+def delete_designer_images(sender, instance, **kwargs):
+    images_to_delete = [instance.dimage, instance.dimage2, instance.dimage3]
+    
+    for img in images_to_delete:
+        if img: 
+            try:
+                cloudinary.uploader.destroy(img.name)
+                print(f"SUCCESS: {img.name} destroyed from Cloudinary!")
+            except Exception as e:
+                print(f"FAILED to delete project image: {e}")

@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage', 
     'django.contrib.staticfiles',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -142,7 +144,6 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 EMAIL_TIMEOUT = 10
 load_dotenv()
 
-MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 CASHFREE_CLIENT_ID = os.environ.get('CASHFREE_CLIENT_ID', '')
@@ -150,3 +151,19 @@ CASHFREE_CLIENT_SECRET = os.environ.get('CASHFREE_CLIENT_SECRET', '')
 CASHFREE_ENV = 'SANDBOX' 
 
 ALLOWED_HOSTS = ['insight-architecture-interior-designing.onrender.com', 'localhost', '127.0.0.1']
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUD_NAME', ''),
+    'API_KEY': os.environ.get('API_KEY', ''),
+    'API_SECRET': os.environ.get('API_SECRET', ''),
+}
+
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}

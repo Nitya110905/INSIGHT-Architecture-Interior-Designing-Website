@@ -1,5 +1,6 @@
 {% extends "common.html" %}
 {% load static %}
+{% load cloudinary %} 
 {% block content %}
 
 <div class="container-fluid bg-primary hero-header mb-5">
@@ -18,11 +19,12 @@
         </div>
     </div>
 </div>
-            <div class="row g-0" style = "display:flex; flex-direction:row;">
+            <div class="row g-0" style="display:flex; flex-direction:row;">
                 {% for d in design %}
                         <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.2s">
                             <div class="project-item position-relative overflow-hidden m-5" style="border-radius:10px">
-                                <img class="img-fluid w-100" style="height: 400px; width: 400px;" src="{{d.dimage.url}}" alt="">
+                                
+                                {% cloudinary d.dimage width="400" height="400" crop="fill" class="img-fluid w-100" style="height: 400px; width: 400px; object-fit: cover;" alt=d.dname %}
                                 <a class="project-overlay text-decoration-none" href="{% url 'design_info' d.slug %}">
                                     <h5 style="height: 20px; width:160px;color:white;position: absolute;top: 10px;left:10px">Starting From : ₹ {{d.dstartprice}}/-</h5>
                                     <h4 class="text-white">{{d.dname}}</h4>
@@ -56,4 +58,3 @@
         </div>
     </div>
     {% endblock %}
-   

@@ -21,6 +21,7 @@ from xhtml2pdf import pisa
 import io
 from datetime import datetime,date
 from django.contrib import auth
+import cloudinary.uploader
 cashfree_instance = Cashfree(
     XClientId=settings.CASHFREE_CLIENT_ID,
     XClientSecret=settings.CASHFREE_CLIENT_SECRET,
@@ -240,11 +241,14 @@ def newpass(request):
 
     return render(request, 'new-password.html')
 
+
 def uprofile(request):
-    user = User.objects.get(email = request.session['email'])
+    user = User.objects.get(email=request.session['email'])
+    
     if request.method == "POST":
         user.name = request.POST['name']
         user.contact = request.POST['mobile']
+        
         if user.usertype == "designer":
             fee = request.POST.get('cf')
             if fee: 
@@ -252,22 +256,31 @@ def uprofile(request):
 
         if 'uprofile' in request.FILES:
             if user.uprofile:
-                user.uprofile.delete(save=False)
+                try:
+                    cloudinary.uploader.destroy(user.uprofile.name)
+                except Exception as e:
+                    print(f"Cloudinary delete failed: {e}")
 
             user.uprofile = request.FILES['uprofile'] 
-            request.session['profile'] = user.uprofile.url
 
         elif request.POST.get('remove_image_flag') == "true":
-
             if user.uprofile:
-                user.uprofile.delete(save=False)
+                try:
+                    cloudinary.uploader.destroy(user.uprofile.name)
+                except Exception as e:
+                    print(f"Cloudinary delete failed: {e}")
                 
             user.uprofile = None
             request.session['profile'] = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnSSxXHLqu5lsHYkFlZkvXuo2ZamNvdqLiCg&s"
 
         user.save()
+        
+        if user.uprofile:
+            request.session['profile'] = user.uprofile.url
+
         messages.success(request, "Profile Updated Successfully !")
         return redirect('uprofile')
+        
     else:   
         return render(request, 'uprofile.html', {'user': user}) 
     
@@ -322,7 +335,7 @@ def manage_design(request):
 
     return render(request,'manage_design.html',{'designer' : designer})
 
-def edit_design(request,pk):
+def edit_design(request, pk):
     try:
         user = User.objects.get(email=request.session['email'])
         design = Designer.objects.get(id=pk, user=user) 
@@ -334,42 +347,43 @@ def edit_design(request,pk):
         design.dname = request.POST['dname']
         design.dstartprice = request.POST['dprice']
         design.dsummary = request.POST['dsummary']
+        
         if request.FILES.get('dimage'):
             if design.dimage:
-                design.dimage.delete(save=False)
-
+                try:
+                    cloudinary.uploader.destroy(design.dimage.name)
+                except Exception as e:
+                    print(f"Cloudinary delete failed: {e}")
             design.dimage = request.FILES.get('dimage')
+            
         if request.FILES.get('dimage2'):
             if design.dimage2:
-                design.dimage2.delete(save=False)
-
+                try:
+                    cloudinary.uploader.destroy(design.dimage2.name)
+                except Exception as e:
+                    print(f"Cloudinary delete failed: {e}")
             design.dimage2 = request.FILES.get('dimage2')
+            
         if request.FILES.get('dimage3'):
             if design.dimage3:
-                design.dimage3.delete(save=False)
-
+                try:
+                    cloudinary.uploader.destroy(design.dimage3.name)
+                except Exception as e:
+                    print(f"Cloudinary delete failed: {e}")
             design.dimage3 = request.FILES.get('dimage3')
 
         design.save()
-        
         messages.success(request, "Design Updated Successfully !")
-        return redirect('edit_design',pk=design.id) 
+        return redirect('edit_design', pk=design.id) 
     
     else:   
         return render(request, 'edit_design.html', {'design': design})
     
+
 def delete_design(request, pk):
     try:
         user = User.objects.get(email=request.session['email'])
         design = Designer.objects.get(id=pk, user=user) 
-        if design.dimage:
-            design.dimage.delete(save=False)
-            
-        if design.dimage2:
-            design.dimage2.delete(save=False)
-            
-        if design.dimage3:
-            design.dimage3.delete(save=False)
         design.delete() 
         
         messages.success(request, "Design and all associated files Deleted !")
