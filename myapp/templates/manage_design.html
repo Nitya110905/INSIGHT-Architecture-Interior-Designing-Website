@@ -38,7 +38,7 @@
                         <div class="col-11 col-sm-10 col-md-8 col-lg-6">
                             <div class="project-item position-relative overflow-hidden shadow" style="border-radius:15px; height: 400px; width: 100%;">
                                 
-                                {% cloudinary d.dimage width="800" height="400" crop="fill" class="img-fluid w-100 h-100" style="object-fit: cover;" alt=d.dname %}
+                                {% cloudinary d.dimage.name width="800" height="400" crop="fill" class="img-fluid w-100 h-100" style="object-fit: cover;" alt=d.dname %}
                                 <a class="project-overlay text-decoration-none" href="{% url 'design_info' d.slug %}">
                                     <h4 class="text-white">{{ d.dname }}</h4>
                                     <small class="text-white">{{ d.dcategory }}</small>

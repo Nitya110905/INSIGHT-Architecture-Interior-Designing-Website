@@ -1,5 +1,6 @@
 {% extends "common.html" %}
 {% load static %}
+{% load cloudinary%}
 {% block content %}
 
 <div class="container-fluid pb-5 bg-primary hero-header">
@@ -33,18 +34,18 @@
         <div class="carousel-inner" style="border-radius:10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
             
             <div class="carousel-item active" data-bs-interval="5000">
-                {% cloudinary design.dimage width="600" height="440" crop="fill" class="d-block w-100" style="height:440px; object-fit: cover;" alt="Main Design" %}
+                {% cloudinary design.dimage.name width="600" height="440" crop="fill" class="d-block w-100" style="height:440px; object-fit: cover;" alt="Main Design" %}
             </div>
             
             {% if design.dimage2 %}
             <div class="carousel-item" data-bs-interval="5000">
-                {% cloudinary design.dimage2 width="600" height="440" crop="fill" class="d-block w-100" style="height:440px; object-fit: cover;" alt="Design View 2" %}
+                {% cloudinary design.dimage2.name width="600" height="440" crop="fill" class="d-block w-100" style="height:440px; object-fit: cover;" alt="Design View 2" %}
             </div>
             {% endif %}
             
             {% if design.dimage3 %}
             <div class="carousel-item" data-bs-interval="5000">
-                {% cloudinary design.dimage3 width="600" height="440" crop="fill" class="d-block w-100" style="height:440px; object-fit: cover;" alt="Design View 3" %}
+                {% cloudinary design.dimage3.name width="600" height="440" crop="fill" class="d-block w-100" style="height:440px; object-fit: cover;" alt="Design View 3" %}
             </div>
             {% endif %}
             
