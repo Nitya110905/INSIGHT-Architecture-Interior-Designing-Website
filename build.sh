@@ -14,5 +14,5 @@ echo "👀 DEBUG: WHERE ARE THE STATIC FOLDERS?"
 find . -type d -name "static"
 # ----------------------
 
-python manage.py collectstatic --no-input
+python manage.py collectstatic --no-input --clear
 python manage.py migrate
